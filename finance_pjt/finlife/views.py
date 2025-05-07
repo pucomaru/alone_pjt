@@ -25,17 +25,35 @@ def save_deposit_products(request):
 
     result = data['result']
 
-    baselist = resl
+    baselists = result['baseList']
+    
+    serializer = DepositProductsSerializer(data=baselists,many=True)
 
-    return Response(result)
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors,status=404)
 
+@api_view(['GET','POST'])
+def deposit_products(request):
 
+    if request.method == "GET":
+        deposit_products = DepositProducts.objects.all()
+        serializer = DepositProductsSerializer(deposit_products,many=True)
+        return Response(serializer.data)
+    
+    elif request.method == "POST":
+        serializer = DepositProductsSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        else:
+            return Response(serializer.errors,status=400)
 
-# @api_view(['GET','POST'])
-# def deposit_products(request):
-
-# @api_view(['GET'])
-# def deposit_product_options(request):
+# 특정 상품의 옵션 리스트 출력 
+@api_view(['GET'])
+def deposit_product_options(request):
 
 # @api_view(['GET'])
 # def top_rate(request):

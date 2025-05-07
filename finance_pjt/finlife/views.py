@@ -26,9 +26,9 @@ def save_deposit_products(request):
     result = data['result']
 
     baselists = result['baseList']
-    
-    serializer = DepositProductsSerializer(data=baselists,many=True)
 
+    serializer = DepositProductsSerializer(data=baselists,many=True)
+    
     if serializer.is_valid():
         serializer.save()
         return Response(serializer.data)
@@ -51,9 +51,30 @@ def deposit_products(request):
         else:
             return Response(serializer.errors,status=400)
 
-# 특정 상품의 옵션 리스트 출력 
+# 옵션 리스트 저장 
 @api_view(['GET'])
-def deposit_product_options(request):
+def save_deposit_options(request):
+    response = requests.get(URL)
+
+    data = response.json()
+
+    result = data['result']
+
+    optionlists = result['optionList']
+
+    serializer = DepositOptionsSerializer(data=optionlists,many=True)
+
+    if serializer.is_valid():
+        serializer.save()
+        return Response(serializer.data)
+    else:
+        return Response(serializer.errors,status=400)
+
+
+# # 특정 상품의 옵션 리스트 출력 
+# @api_view(['GET'])
+# def deposit_product_options(request,fin_prdt_cd):
+    
 
 # @api_view(['GET'])
 # def top_rate(request):
